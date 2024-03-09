@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/projects.css' %}">
+   
+    <title>Database Management</title>
+</head>
+<body>
+
+<nav class="nav">
+    <navbar class="navbar">
+        <p><a href="">Home</a></p>
+        <p><a href="">Procurements</a></p>
+       <p> <a href="{% url 'projects' %}">Projects</a></p>
+        <p><a href="{% url 'edit_form' %}">Reports</a></p>
+        <p><a href="">Transaction History</a></p>
+    </navbar>
+</nav>
+
+<div class="project">
+    <h1 class="head"><a href="{% url 'projects' %}">Projects</a></h1>
+    <form method="get" class="search">
+        <input type="text" id="search" name="q" value="{{ search_entry }}" placeholder="Search by name">
+        <button type="submit">Search</button>
+    </form>
+
+    <table >
+        <thead>
+            <tr class="project-row">
+                <th>Project Name</th>
+                <th>Budget</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Spent</th>
+                <th>Utilization Rate (%)</th> <!-- New column for utilization rate -->
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="table">
+            {% if data_list_entry %}
+                {% for entry in data_list_entry %}
+                <tr >
+
+                        <td onclick="displayPieChart('{{ entry.project_name }}', '{{ entry.budget }}', '{{ entry.spent }}')">{{ entry.project_name }}</td>
+                        <td>{{ entry.budget }}</td>
+                        <td>{{ entry.start_date }}</td>
+                        <td>{{ entry.end_date }}</td>
+                        <td>{{ entry.spent }}</td>
+                        <td>{{ entry.utilization_rate|default:"N/A" }}</td> <!-- Display utilization rate -->
+                        <td>
+                            <!-- Edit Button -->
+                            <!-- Edit Button -->
+<form method="get" action="{% url 'update_entry' entry_key=entry.key %}" style="display: inline;">
+    <button type="submit">Edit</button>
+</form>
+
+                            <!-- Delete Button -->
+                            <form method="post" action="{% url 'delete_entry' entry_key=entry.key %}" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+
+    <button onclick="toggleAddForm()" class="toggle">Add New Entry</button>
+   
+    <div id="add_form" style="display: none;">
+        <h2>Add New Entry</h2>
+        <form method="post" action="{% url 'create_entry' %}" class="add_project">
+            {% csrf_token %}
+            <label for="projectname">Project Name:</label><br>
+            <input type="text" id="projectname" name="projectname"><br>
+            <label for="budget">Budget:</label><br>
+            <input type="number" id="budget" name="budget"><br>
+            <label for="start_date">Start Date:</label><br>
+            <input type="date" id="start_date" name="start_date"><br>
+            <label for="end_date">End Date:</label><br>
+            <input type="date" id="end_date" name="end_date"><br>
+            <label for="spent">Spent:</label><br>
+            <input type="number" id="spent" name="spent"><br>
+            <label for="title">Title:</label><br>
+            <input type="text" id="title" name="title"><br>
+            <input type="submit" value="Save">
+        </form>
+    </div>
+    {% if entry %}
+    <div class="project">
+        <h2>Edit Entry</h2>
+        <form method="post" action="{% url 'update_entry' entry_key=entry_key %}" id="update" class="update">
+            {% csrf_token %}
+            <label for="projectname">Project Name:</label><br>
+            <input type="text" id="projectname" name="projectname" value="{{ entry.project_name }}"><br>
+            <label for="budget">Budget:</label><br>
+            <input type="number" id="budget" name="budget" value="{{ entry.budget }}"><br>
+            <label for="start_date">Start Date:</label><br>
+            <input type="date" id="start_date" name="start_date" value="{{ entry.start_date }}"><br>
+            <label for="end_date">End Date:</label><br>
+            <input type="date" id="end_date" name="end_date" value="{{ entry.end_date }}"><br>
+            <label for="spent">Spent:</label><br>
+            <input type="number" id="spent" name="spent" value="{{ entry.spent }}"><br>
+            <label for="title">Title:</label><br>
+            <input type="text" id="title" name="title" value="{{ entry.title }}"><br>
+            <input type="submit" value="Save">
+        </form>
+    </div>
+    {% endif %}
+    
+
+</div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+
+<div class="chart-container" style="position: relative; height: 300px; width: 300px;">
+    <canvas id="utilizationChart"></canvas>
+</div>
+
+<script>
+    var utilizationChart; // Define chart variable globally
+
+    function displayPieChart(projectName, budget, spent) {
+        var utilizationData = {
+            labels: ['Budget Spent', 'Remaining Budget'],
+            datasets: [{
+                label: 'Utilization Rate',
+                data: [spent, budget - spent],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.5)', // Budget Spent
+                    'rgba(54, 162, 235, 0.5)', // Remaining Budget
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                ],
+                borderWidth: 1
+            }]
+        };
+
+        // Check if chart already exists, if yes, update data and redraw, if not, create new chart
+        if (utilizationChart) {
+            utilizationChart.data.datasets[0].data = utilizationData.datasets[0].data;
+            utilizationChart.update();
+        } else {
+            var ctx = document.getElementById('utilizationChart').getContext('2d');
+            utilizationChart = new Chart(ctx, {
+                type: 'pie', // Change chart type to pie
+                data: utilizationData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false, // Ensure the chart size is fixed
+                }
+            });
+        }
+    }
+
+    function toggleAddForm() {
+        var addForm = document.getElementById('add_form');
+        addForm.style.display = addForm.style.display === 'none' ? 'block' : 'none';
+    }
+
+    var projectRows = document.querySelectorAll('.project-row');
+projectRows.forEach(function(row) {
+    row.addEventListener('click', function() {
+        var projectName = row.dataset.projectName;
+        var budget = parseFloat(row.dataset.budget);
+        var spent = parseFloat(row.dataset.spent);
+        displayPieChart(projectName, budget, spent);
+    });
+});
+
+
+    
+
+</script>
+
+
+
+
+</body>
+</html>

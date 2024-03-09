@@ -1,0 +1,123 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.navbar {
+    display: flex;
+    justify-content: center;
+    padding: 2% 0;
+}
+
+
+
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
+}
+
+.nav {
+    background-color: #333;
+    color: #fff;
+    padding: 10px 0;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-around;
+}
+
+.navbar a {
+    text-decoration: none;
+    color: #fff;
+    font-size: 25px;
+}
+.ldf{
+
+
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.main {
+    margin: 20px;
+}
+
+.ldf {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.search {
+    margin-bottom: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table th, table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+table th {
+    background-color: #f2f2f2;
+}
+
+button {
+    padding: 8px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: black;
+    color: #fff;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: gray;
+}
+
+.add_ldf input[type="text"],
+.add_ldf input[type="number"],
+.add_ldf input[type="date"],
+.update_ldf input[type="text"],
+.update_ldf input[type="number"],
+.update_ldf input[type="date"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.add_ldf input[type="submit"],
+.update_ldf input[type="submit"] {
+    background-color: black;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 10px 20px;
+    text-decoration: none;
+}
+
+.add_ldf input[type="submit"]:hover,
+.update_ldf input[type="submit"]:hover {
+    background-color: black;
+}
+.toggle{
+    margin-top: 2%;
+}
+

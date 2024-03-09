@@ -1,0 +1,97 @@
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyBrm2OZhgEi5UF0hTr36t-X8CJ7jffc_z8",
+  authDomain: "test-24ea0.firebaseapp.com",
+  databaseURL: "https://test-24ea0-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "test-24ea0",
+  storageBucket: "test-24ea0.appspot.com",
+  messagingSenderId: "811829331453",
+  appId: "1:811829331453:web:12930831feba2f3a098594",
+  measurementId: "G-5EQ2SMHDSY"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+
+
+
+
+
+
+
+
+import pyrebase
+from django.shortcuts import render
+from django.http import HttpResponseRedirect
+from .forms import UploadFileForm
+from .models import ExcelData
+import pandas as pd
+import matplotlib.pyplot as plt
+from io import BytesIO
+from .firebase import database, firebase
+import json
+from django.http import JsonResponse
+from django.http import HttpResponse
+
+def upload(request):
+    if request.method == 'POST':
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            excel_file = request.FILES['file']
+            # Read Excel file into a Pandas DataFrame
+            df = pd.read_excel(excel_file)
+            # Convert DataFrame to a list of dictionaries
+            data = df.to_dict(orient='records')
+            # Serialize the Python data structure into JSON format
+            json_data = json.dumps(data)
+            try:
+                # Push the JSON data to Firebase
+                database.child("excel_data").set(json_data)
+                return JsonResponse({'message': 'Upload successful'}, status=200)
+            except Exception as e:
+                return JsonResponse({'error': str(e)}, status=500)
+    else:
+        form = UploadFileForm()
+    return render(request, 'upload.html', {'form': form})
+
+
+
+def graph(request):
+    firebase_data = database.child("excel_data").get().val()
+    if firebase_data:
+        data = json.loads(firebase_data)
+        df = pd.DataFrame(data)
+        plt.plot(df)
+        plt.xlabel('X Axis')
+        plt.ylabel('Y Axis')
+        plt.title('Graph of Excel Data')
+        # Save the plot as a PNG image
+        imgdata = BytesIO()
+        plt.savefig(imgdata, format='png')
+        imgdata.seek(0)
+        # Serve the image as a static file
+        response = HttpResponse(imgdata.getvalue(), content_type='image/png')
+        return response
+    else:
+        return HttpResponse("No data available to plot the graph.")
+
+
+
+# Adjust other parts of the code as necessary
+
+def sample(request):
+    return render(request,'sample.html')
+
+
+
+ 
+    <h2>Graph of Excel Data</h2>
+    <img src="data:image/png;base64,{{ image }}" alt="Graph">

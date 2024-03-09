@@ -1,0 +1,12 @@
+
+<a href="edit_form"></a>
+
+<a href="graph"></a>
+
+<h2>Upload Excel File</h2>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form }}
+    <input type="file" name="file" multiple>
+    <button type="submit">Upload</button>
+</form>
