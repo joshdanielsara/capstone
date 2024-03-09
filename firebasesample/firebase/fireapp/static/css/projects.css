@@ -1,0 +1,174 @@
+
+
+
+
+
+/* Resetting default margins and paddings */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+/* Header styling */
+.nav {
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-around;
+
+    padding: 2% 0;
+}
+
+.navbar p {
+    margin-right: 20px;
+    font-size: 25px;
+}
+
+.navbar a {
+    color: #fff;
+    text-decoration: none;
+}
+
+/* Main content styling */
+.project {
+    max-width: 850px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.project h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.search {
+    margin-bottom: 20px;
+}
+
+.search input[type="text"] {
+    padding: 8px;
+    width: 200px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-right: 5px;
+}
+
+.search button {
+    padding: 8px 15px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 2%;
+}
+
+table th, table td {
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+
+table th {
+    background-color: #f2f2f2;
+    font-size: 15px;
+}
+
+/* Form styling */
+.add_project, .update {
+    margin-bottom: 20px;
+}
+
+.add_project label, .update label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.add_project input[type="text"], 
+.add_project input[type="number"], 
+.add_project input[type="date"],
+.update input[type="text"], 
+.update input[type="number"], 
+.update input[type="date"] {
+    padding: 8px;
+    width: calc(100% - 10px);
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.add_project input[type="submit"], .update input[type="submit"] {
+    padding: 10px 15px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.add_project input[type="submit"]:hover, .update input[type="submit"]:hover {
+    background-color: #555;
+}
+
+/* Button and Form toggling */
+#add_form, #update_form {
+    display: none;
+}
+
+
+
+/* Button styling */
+button {
+    padding: 10px 20px;
+    background-color: black;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: gray;
+}
+
+/* Form and Button positioning */
+form {
+    display: inline;
+    margin-right: 10px;
+}
+.toggle{
+    margin-top: 2%;
+}
+
+.chart-container{
+    position: relative; 
+    height: 300px; 
+    width: 300px;
+    margin-left: 40%;
+}
+
+.head a{
+    text-decoration: none;
+    color: #000;
+}
+

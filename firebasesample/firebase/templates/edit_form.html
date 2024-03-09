@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/edit.css' %}">
+   
+    <title>Database Management</title>
+</head>
+<body>
+
+    <nav class="nav">
+        <navbar class="navbar">
+            <p><a href="">Home</a></p>
+            <p><a href="">Procurements</a></p>
+           <p> <a href="{% url 'projects' %}">Projects</a></p>
+            <p><a href="">Reports</a></p>
+            <p><a href="">Transaction History</a></p>
+        </navbar>
+    </nav>
+    <div class="main">
+
+
+
+        <div class="ldf">
+            <h1>LDF</h1>
+            {% csrf_token %}
+            
+            <form method="get" class="search">
+                <input type="text" id="search_ldf" name="w" value="{{ search_ldf }}" placeholder="Search by name">
+                <button type="submit">Search</button>
+            </form>
+            
+            
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Budget</th>
+                        <th>Start Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if data_list_ldf %}
+                        {% for entry in data_list_ldf %}
+                            <tr>
+                                <td>{{ entry.name }}</td>
+                                <td>{{ entry.budget }}</td>
+                                <td>{{ entry.date }}</td>
+                                <td>
+                                    <!-- Edit Button -->
+                                    <form method="get" action="{% url 'update_ldf_entry' entry_key=entry.key %}" style="display: inline;">
+                                        <button type="submit">Edit</button>
+                                    </form>
+                                    <!-- Delete Button -->
+                                    <form method="post" action="{% url 'delete_ldf_entry' entry_key=entry.key %}" style="display: inline;">
+                                        {% csrf_token %}
+                                        <button type="submit">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                           
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        
+            <button onclick="toggleAddForm()" class="toggle">Add New Entry</button>
+        
+            <div id="add_form_ldf" style="display: none;">
+                <h2>Add New Entry</h2>
+                <form method="post" action="{% url 'create_ldf' %}" class="add_ldf">
+                    {% csrf_token %}
+                    <label for="name">Name:</label><br>
+                    <input type="text" id="name" name="name"><br>
+                    <label for="budget">Budget:</label><br>
+                    <input type="number" id="budget" name="budget"><br>
+                    <label for="date">Start Date:</label><br>
+                    <input type="date" id="date" name="date"><br>
+                    <label for="title">Title:</label><br>
+                    <input type="text" id="title" name="title"><br>
+                    <input type="submit" value="Save">
+                </form>
+            </div>
+        
+            {% if entry %}
+            <form method="post" action="{% url 'update_ldf_entry' entry_key=entry_key %}" id="update_ldf" class="update_ldf">
+                {% csrf_token %}
+                <input type="hidden" id="entry_key_ldf" name="entry_key" value="{{ entry.key }}">
+                <label for="name">Project Name:</label><br>
+                <input type="text" id="name" name="name" value="{{ entry.name }}"><br>
+                <label for="budget">Budget:</label><br>
+                <input type="number" id="budget" name="budget" value="{{ entry.budget }}"><br>
+                <label for="date">Start Date:</label><br>
+                <input type="date" id="date" name="date" value="{{ entry.date }}"><br>
+                <input type="submit" value="Update">
+            </form>
+            {% endif %}
+        </div>
+        
+        
+
+        
+
+
+
+
+
+        <script>
+   
+
+
+   function toggleAddForm() {
+            var list = document.getElementById("add_form_ldf");
+            if (list.style.display === "none") {
+                list.style.display = "block";
+            } else {
+                list.style.display = "none";
+            }
+        }
+        
+            function toggleUpdateForm() {
+                var updateForm = document.getElementById('update_form');
+                updateForm.style.display = updateForm.style.display === 'none' ? 'block' : 'none';
+        
+                var addForm = document.getElementById('add_form');
+                addForm.style.display = 'none';
+            }
+        </script>
+</body>
+</html>
